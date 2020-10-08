@@ -1,19 +1,19 @@
-const  ProjectType  = require ('../model/projectTypeModel');
-const createNewProjectType = async (req,res) => {
+const ProjectType = require('../model/projectTypeModel');
+const createNewProjectType = async (req, res) => {
   try {
-    const projectTypeExit = await ProjectType.findOne({ name: req.name });
+    const projectTypeExit = await ProjectType.findOne({ name: req.body.name });
     if (projectTypeExit) return res.status(400).send('Project is already exist')
-    
+
     //create data
     const newProjectType = await ProjectType.create({
-        name : req.name,
-        description: req.description,
-        priority: req.priority,
-        status: req.status
+      name: req.body.name,
+      description: req.body.description,
+      priority: req.body.priority,
+      status: req.body.status
     });
-    if (newProjectType) return res.status(200).send('Project created success') 
+    if (newProjectType) return res.status(200).send('Project created success')
   } catch (err) {
-        res.status(400).send(err);
+   console.log(err)
   }
 };
 
