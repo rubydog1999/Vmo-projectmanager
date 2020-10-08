@@ -21,6 +21,7 @@ const registerUsr = async (req, res) => {
     });
     const savedAdmin = await adMin.save();
     res.send(savedAdmin);
+
     } catch (err) {
         res.status(400).send(err);
     }
@@ -39,6 +40,7 @@ const loginUsr = async (req, res) => {
 
         // Create and assign a token
         const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET);
+
         res.header('auth-token', token).send(token)
     } catch (err) {
         res.status(400).send(err);
