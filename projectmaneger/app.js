@@ -4,7 +4,6 @@ const mongoose = require ('mongoose');
 const dotenv = require ('dotenv');
 const admin = require ('./route/admin');
 const projectType = require('./route/projectType')
-
 const bodyParser = require('body-parser')
 dotenv.config();  
 // node --experimental-modules app.js

@@ -1,8 +1,13 @@
 const express = require("express")
 const {verifitoken} = require("../middelware/verifytoken")
 const router = express.Router();
-const {createNewProjectType} = require("../controller/projectTypecontroller")
+const {createNewProjectType, getProjectTypeProfile, updateProjectType} = require("../controller/projectTypecontroller")
 
 router.post('/types/',verifitoken,createNewProjectType);
 
+router.get('/types/:id',verifitoken,getProjectTypeProfile);
+
+router.put('/types/:id',verifitoken,updateProjectType);
+
 module.exports = router
+

@@ -8,7 +8,9 @@ const registerUsr = async (req, res) => {
     const { error } = RegisterValidation(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     //Check if email already on the database
-    const userExit = await Admin.findOne({ userName: req.body.userName })
+    const userExit = await Admin.findOne({
+         userName: req.body.userName
+         })
     if (userExit) return res.status(400).send('User is already exist')
 
     //Hash Password
