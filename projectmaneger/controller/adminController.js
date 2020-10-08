@@ -19,9 +19,8 @@ const registerUsr = async (req, res) => {
         userName: req.body.userName,
         password: hashPassword,
     });
-    const savedAdmin = await adMin.save();
+        const savedAdmin = await adMin.save();
     res.send(savedAdmin);
-
     } catch (err) {
         res.status(400).send(err);
     }
@@ -39,6 +38,7 @@ const loginUsr = async (req, res) => {
         if (!validPassword) return res.status(400).send("Wrong Password")
 
         // Create and assign a token
+
         const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET);
 
         res.header('auth-token', token).send(token)
