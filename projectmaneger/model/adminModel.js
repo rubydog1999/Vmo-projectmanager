@@ -8,9 +8,9 @@ const AdminSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Password field is required'],
   },
-  // status: {
-  //   type: String,
-  //   default: 'active',
-  // },
+  status: {
+    type: String,
+    default: 'active',
+  },
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 module.exports = mongoose.model('Admin',AdminSchema)
