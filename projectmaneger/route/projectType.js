@@ -9,5 +9,7 @@ router.get('/types/:id',verifitoken,getProjectTypeProfile);
 
 router.put('/types/:id',verifitoken,updateProjectType);
 
+// router.delete('/types/:id',verifitoken,)
+
 module.exports = router
 
