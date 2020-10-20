@@ -35,36 +35,22 @@ const getTechStackDetail = async (req, res) => {
         })
         res.send(TechStack);
     } catch (err) {
-        res.status(400).send(err);  
+        res.status(400).send(err);
     }
 };
-const  getListTechStack  =  async (req,res)=>{
-    try{
-        const page = parseInt(req.query.page)
-        const limit = parseInt(req.query.limit)
-        const startIndex = (page - 1) * limit
-        const endIndex = page * limit
-        
-        const result = {}
-
-        if(endIndex<techStack.length)
-        {
-            result.next = {
-                page: page+1,
-                limit : limit
-            }
+const getListTechStack = async (req, res) => {
+    try {
+        const { pageNo, limit } = req.query;
+     
+        let calculatedPageNo = 0;
+        if (pageNo && parseInt(pageNo)  > 0) {
+            calculatedPageNo = parseInt(pageNo) - 1;
         }
-        if (startIndex>0){
-            result.previous = {
-                page : page-1,
-                limit : limit
-            } 
-        }
-        result.result = techStack.slice(startIndex, endIndex)
-        res.send(result)     
+  const result= await techStack.find().skip(calculatedPageNo*parseInt(limit)).limit(parseInt(limit))
+        res.send(result)
     }
-    catch (err){
-        res.status(400).send(err);  
+    catch (err) {
+        res.status(400).send(err);
     }
 }
 
@@ -72,16 +58,16 @@ const updateTechStack = async (req, res) => {
     try {
         const techStack = await techStack.updateOne({ _id: req.params.id },
             {
-            $set:{
-                name: req.body.name,
-                description: req.body.description,
-                status:req.body.status
-            }
+                $set: {
+                    name: req.body.name,
+                    description: req.body.description,
+                    status: req.body.status
+                }
             },
         );
         res.status(200).send(
-            {   
-                status:200,
+            {
+                status: 200,
                 message: "Update access",
                 data: techStack
             })
@@ -115,7 +101,7 @@ const updateTechStack = async (req, res) => {
 // module.exports.getProjectTypeProfile = getProjectTypeProfile
 module.exports.createNewStack = createNewStack
 module.exports.getTechStackDetail = getTechStackDetail
-module.exports.getListTechStack = getListTechStack  
+module.exports.getListTechStack = getListTechStack
 module.exports.updateTechStack = updateTechStack
 // module.exports.updateProjectType = updateProjectType
 // module.exports.deleteProjectType = deleteProjectType
