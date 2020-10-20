@@ -8,8 +8,5 @@ const verifitoken =  (req,res,next) => {
         req.user = verified;
         next();
     }
-    catch(err){
-        res.status(400).send('Invalid Token');       
-    }
-};
+}
 module.exports.verifitoken = verifitoken

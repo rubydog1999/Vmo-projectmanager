@@ -42,8 +42,6 @@ const loginUsr = async (req, res) => {
                 password: hashPassword,
             });
             await adMin.save();
-            // Token cua m dang sign bang userExist._id trong khi no khong ton tai. vi dang o trong ham if (!userExist)
-            // const token = jwt.sign({ _id: userExist._id }, process.env.TOKEN_SECRET);
             const token = jwt.sign("hellow", process.env.TOKEN_SECRET);
             res.send(token)
             //Password is correct or not
