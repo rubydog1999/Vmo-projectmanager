@@ -1,8 +1,13 @@
 const ProjectType = require('../model/projectTypeModel');
 const createNewProjectType = async (req, res) => {
     try {
-        const projectTypeExit = await ProjectType.findOne({ name: req.name });
-        if (projectTypeExit) return res.status(400).send('Project is already exist')
+        const projectTypeExit = await ProjectType.findOne({ name: req.body.name });
+        if (projectTypeExit) return res.status(400).send({
+            status: 400,
+            code: 'PROJECT_TYPE_EXIST',
+            error: true,
+           
+        })
         //create data
         const newProjectType = await ProjectType.create({
             name: req.body.name,
@@ -10,70 +15,72 @@ const createNewProjectType = async (req, res) => {
             priority: req.body.priority,
             status: req.body.status
         });
-        if (newProjectType) return res.status(200).send('Project created success')
+        if (newProjectType) return res.status(200).send({
+            status: 200,
+            code: 'CREATE_NEW_PROJECT_TYPE_SUCCESS',
+            error: false,
+            data: newProjectType._id,
+        })
     } catch (err) {
         res.status(400).send(err);
     }
 };
-
-
 const getProjectTypeProfile = async (req, res) => {
     try {
         const projectType = await ProjectType.findOne({ _id: req.params.id });
-        if (!projectType) return res.status(404).send("project is not found")
+        if (!projectType) return res.status(404).send({
+            status: 404,
+            message: 'PROJECT_TYPE_IS_NOT_FOUND'
+        })
         res.send(projectType);
     } catch (err) {
-        res.status(400).send(err);
+        res.status(400).send(err);  
     }
 };
 
 
 const updateProjectType = async (req, res) => {
     try {
-        console.log(" req.params.id,", req.params.id)
-        const ProjectTypeUpdate = await ProjectType.updateOne({ id: req.params.id },
+        const ProjectTypeUpdate = await ProjectType.updateOne({ _id: req.params.id },
             {
             $set:{
                 name: req.body.name,description: req.body.description,priority: req.body.priority,status:req.body.status}
             },
         );
-        res.send(
-            {
+        res.status(200).send(
+            {   
+                status:200,
                 message: "Update access",
-                record: ProjectTypeUpdate
+                data: ProjectTypeUpdate
             })
         return;
     }
     catch (err) {
-        console.log(err)
+        res.status(400).send(err);
     }
 }
 const deleteProjectType = async (req,res) => {
     try {
-      const projectType = await ProjectType.findOne({ _id: id });
-      if (!projectType){
-        return {
+      const projectTypeDelete = await ProjectType.findOne({ _id: req.params.id });
+      if (!projectTypeDelete){
+        res.status(404).send({
           status: 404,
           code: 'PRODUCT_TYPE_NOT_FOUND',
           error: true,
-        };
-  
+        });
       }
-  
-      await projectType.updateOne({ status: 'deleted' });
-  
-      return {
+    await ProjectType.remove({ _id: req.params.id })
+    res.status(200).send( {
         status: 200,
         code: 'DELETE_PROJECT_TYPE_SUCCESS',
         error: false,
-      };
+      });
     }catch( err ){
-      logger(`deleteProjectType ${err}`);
-  
-      return errorResponse;
+        res.status(400).send(err);
     }
   };
 
 module.exports.getProjectTypeProfile = getProjectTypeProfile
 module.exports.createNewProjectType = createNewProjectType
 module.exports.updateProjectType = updateProjectType
+module.exports.deleteProjectType = deleteProjectType

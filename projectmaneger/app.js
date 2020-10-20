@@ -4,7 +4,9 @@ const mongoose = require ('mongoose');
 const dotenv = require ('dotenv');
 const admin = require ('./route/admin');
 const projectType = require('./route/projectType')
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const logger = require('./helper/log');
+const techStack = require('./route/techStack')
 dotenv.config();  
 // node --experimental-modules app.js
 const app = express()
@@ -26,7 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 
 app.use(bodyParser.json())
-app.use('/api', [admin,projectType]);
-app.listen(3000, () => console.log('Example listening on port 3000!'))
+app.use('/api', [admin,projectType,techStack]);
+app.listen(3000, () => logger.info('Server listening on port 3000!'))
 
 

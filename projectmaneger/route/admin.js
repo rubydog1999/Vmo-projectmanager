@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/admins/', loginUsr);
 
 // register
-router.post('/admins/', registerUsr);
+router.post('/admins/',verifitoken, registerUsr);
 
 module.exports = router
