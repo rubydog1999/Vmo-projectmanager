@@ -34,7 +34,7 @@ const getTechStackDetail = async (req, res) => {
         })
         res.send(TechStack);
     } catch (err) {
-        res.status(400).send(err);  
+        res.status(400).send(err);
     }
 };
 const  getListTechStack  =  async (req,res)=>{
@@ -46,8 +46,8 @@ const  getListTechStack  =  async (req,res)=>{
         const result= await techStack.find().skip(startIndex).limit(endIndex)
         res.send(result)  
     }
-    catch (err){
-        res.status(400).send(err);  
+    catch (err) {
+        res.status(400).send(err);
     }
 }
 
@@ -55,16 +55,16 @@ const updateTechStack = async (req, res) => {
     try {
         const gettechStack = await techStack.updateOne({ _id: req.params.id },
             {
-            $set:{
-                name: req.body.name,
-                description: req.body.description,
-                status:req.body.status
-            }
+                $set: {
+                    name: req.body.name,
+                    description: req.body.description,
+                    status: req.body.status
+                }
             },
         );
         res.status(200).send(
-            {   
-                status:200,
+            {
+                status: 200,
                 message: "Update access",
                 data: gettechStack
             })
@@ -97,6 +97,6 @@ const deleteTechStack = async (req,res) => {
 
 module.exports.createNewStack = createNewStack
 module.exports.getTechStackDetail = getTechStackDetail
-module.exports.getListTechStack = getListTechStack  
+module.exports.getListTechStack = getListTechStack
 module.exports.updateTechStack = updateTechStack
 module.exports.deleteTechStack = deleteTechStack
