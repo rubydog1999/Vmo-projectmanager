@@ -27,6 +27,13 @@ const createNewProjectType = async (req, res) => {
 };
 const getProjectTypeProfile = async (req, res) => {
     try {
+        const checkID = await  mongoose.Types.ObjectId.isValid(id)
+        console.log(checkID)
+        if (checkID = false)
+        res.status(400).send({
+            status: 400,
+            message: 'INVALID ID'
+        })
         const projectType = await ProjectType.findOne({ _id: req.params.id });
         if (!projectType) return res.status(404).send({
             status: 404,
