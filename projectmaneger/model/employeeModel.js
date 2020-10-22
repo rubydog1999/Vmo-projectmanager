@@ -25,35 +25,25 @@ const employee = new Schema({
     type: String,
     required: [true, 'Address field is required'],
   },
-  language: [ String
+  language: [String
   ],
   certification: [
     String
   ],
-  techStackList: [
-    {
-      techStack:
-      {
-        type: ObjectId,
-        ref: 'techStacks',
-      },
-      exp: String,
-      description: String,
-    },
-  ],
-//   projectList: [
-//     {
-//       project:
-//       {
-//         type: ObjectId,
-//         ref: 'projects',
-//       },
-//     },
-//   ],
-//   status: {
-//     type: String,
-//     default: 'active',
-//   },
+  techStackID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'techStack' }],
+  //   projectList: [
+  //     {
+  //       project:
+  //       {
+  //         type: ObjectId,
+  //         ref: 'projects',
+  //       },
+  //     },
+  //   ],
+  //   status: {
+  //     type: String,
+  //     default: 'active',
+  //   },
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
 module.exports = mongoose.model('Employee', employee);
