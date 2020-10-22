@@ -6,7 +6,7 @@ const createNewProjectType = async (req, res) => {
             status: 400,
             code: 'PROJECT_TYPE_EXIST',
             error: true,
-           
+
         })
         //create data
         const newProjectType = await ProjectType.create({
@@ -27,13 +27,13 @@ const createNewProjectType = async (req, res) => {
 };
 const getProjectTypeProfile = async (req, res) => {
     try {
-        const checkID = await  mongoose.Types.ObjectId.isValid(id)
+        const checkID = await mongoose.Types.ObjectId.isValid(id)
         console.log(checkID)
         if (checkID = false)
-        res.status(400).send({
-            status: 400,
-            message: 'INVALID ID'
-        })
+            res.status(400).send({
+                status: 400,
+                message: 'INVALID ID'
+            })
         const projectType = await ProjectType.findOne({ _id: req.params.id });
         if (!projectType) return res.status(404).send({
             status: 404,
@@ -41,7 +41,7 @@ const getProjectTypeProfile = async (req, res) => {
         })
         res.send(projectType);
     } catch (err) {
-        res.status(400).send(err);  
+        res.status(400).send(err);
     }
 };
 
@@ -50,13 +50,14 @@ const updateProjectType = async (req, res) => {
     try {
         const ProjectTypeUpdate = await ProjectType.updateOne({ _id: req.params.id },
             {
-            $set:{
-                name: req.body.name,description: req.body.description,priority: req.body.priority,status:req.body.status}
+                $set: {
+                    name: req.body.name, description: req.body.description, priority: req.body.priority, status: req.body.status
+                }
             },
         );
         res.status(200).send(
-            {   
-                status:200,
+            {
+                status: 200,
                 message: "Update access",
                 data: ProjectTypeUpdate
             })
@@ -66,26 +67,26 @@ const updateProjectType = async (req, res) => {
         res.status(400).send(err);
     }
 }
-const deleteProjectType = async (req,res) => {
+const deleteProjectType = async (req, res) => {
     try {
-      const projectTypeDelete = await ProjectType.findOne({ _id: req.params.id });
-      if (!projectTypeDelete){
-        res.status(404).send({
-          status: 404,
-          code: 'PRODUCT_TYPE_NOT_FOUND',
-          error: true,
+        const projectTypeDelete = await ProjectType.findOne({ _id: req.params.id });
+        if (!projectTypeDelete) {
+            res.status(404).send({
+                status: 404,
+                code: 'PRODUCT_TYPE_NOT_FOUND',
+                error: true,
+            });
+        }
+        await ProjectType.remove({ _id: req.params.id })
+        res.status(200).send({
+            status: 200,
+            code: 'DELETE_PROJECT_TYPE_SUCCESS',
+            error: false,
         });
-      }
-    await ProjectType.remove({ _id: req.params.id })
-    res.status(200).send( {
-        status: 200,
-        code: 'DELETE_PROJECT_TYPE_SUCCESS',
-        error: false,
-      });
-    }catch( err ){
+    } catch (err) {
         res.status(400).send(err);
     }
-  };
+};
 
 module.exports.getProjectTypeProfile = getProjectTypeProfile
 module.exports.createNewProjectType = createNewProjectType

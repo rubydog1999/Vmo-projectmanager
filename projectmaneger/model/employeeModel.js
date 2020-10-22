@@ -30,20 +30,23 @@ const employee = new Schema({
   certification: [
     String
   ],
-  techStackID: [{ type: mongoose.Schema.Types.ObjectId, ref: 'techStack' }],
-  //   projectList: [
-  //     {
-  //       project:
-  //       {
-  //         type: ObjectId,
-  //         ref: 'projects',
-  //       },
-  //     },
-  //   ],
-  //   status: {
-  //     type: String,
-  //     default: 'active',
-  //   },
+  techStackList: [
+    {
+      techStack:
+      {
+        type: ObjectId,
+        ref: 'techStack',
+      },
+      exp: String,
+      description: String,
+    },
+  ],
+
+  // techStackID: [{ 
+  //   type: mongoose.Schema.Types.ObjectId, ref: 'techStack' 
+
+  // }],
+
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
 module.exports = mongoose.model('Employee', employee);

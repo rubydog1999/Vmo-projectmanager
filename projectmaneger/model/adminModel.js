@@ -1,4 +1,4 @@
-const mongoose = require ("mongoose");
+const mongoose = require("mongoose");
 const AdminSchema = new mongoose.Schema({
   userName: {
     type: String,
@@ -13,4 +13,4 @@ const AdminSchema = new mongoose.Schema({
     default: 'active',
   },
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
-module.exports = mongoose.model('Admin',AdminSchema)
+module.exports = mongoose.model('Admin', AdminSchema)

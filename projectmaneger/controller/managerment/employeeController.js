@@ -3,48 +3,76 @@ const techStack = require('../../model/techStackModel')
 const Employee = require('../../model/employeeModel')
 const { get } = require('mongoose')
 
-const createNewEmployee = async (req,res) =>{
-    try{
-    const employee = await Employee.findOne( {idNumber: req.body.idNumber})
-    if (employee){
-        return res.status(400).send({
-            status:400,
-            message : "employee already exist need to change IDs number",
-            code:"EMPLOYEE_EXISIED"
-        })
-    }
-    {
-    const newEmployees = new Employee(req.body)
-    await newEmployees.save()
-    res.status(200).send({
-        status:200,
-        message: "Create new employee success",
-        code: "CREATE_NEW_EMPLOYEE_SUCCESS"
+const createNewEmployee = async (req, res) => {
+    try {
+        
+        const employee = await Employee.findOne({ idNumber: req.body.idNumber })
+        if (employee) {
+            return res.status(400).send({
+                status: 400,
+                message: "employee already exist need to change IDs number",
+                code: "EMPLOYEE_EXISIED"
+            })
+        }
+        for(let a=0 ; a<=req.body.techStackList.lenght; a++){
+            const findTechStack = await techStack.findOne({_id:req.body.techStackList[a].techStack})
+            if (!findTechStack){
+                return res.status(400).send({
+                    status: 404,
+                    code: 'TECH_STACK_NOT_FOUND',
+                    error: true,
+                    message: `TechStack is not existed`,
+                })
+            }
+        }
+        {
+            const newEmployees = new Employee(req.body)
+            await newEmployees.save()
+            res.status(200).send({
+                status: 200,
+                message: "Create new employee success",
+                code: "CREATE_NEW_EMPLOYEE_SUCCESS"
             })
         }
     }
-    catch(err){
+    catch (err) {
         res.status(400).send({
-            status:400,
-            message : `${err}`
+            status: 400,
+            message: `${err}`
         })
 
     }
 }
-const getEmployeee = async (req,res) =>{
-    try{
-        const findEmployee = await Employee.findOne({_id:req.params.id}).populate('techStackID')
-        if(findEmployee){
+const getEmployeee = async (req, res) => {
+    try {
+        const findEmployee = await Employee.findOne({ _id: req.params.id }).
+            populate({
+                path: 'techStackList',
+                populate: {
+                    path: 'techStack',
+                    select: ['name']
+                },
+
+            });
+        // .populate({
+        //     path: 'techStackList',
+        //     populate: {
+        //       path: 'techStack',
+        //       select: ['name', 'status'],
+        //     },
+        //   });
+        // .populate('techStackID')
+        if (findEmployee) {
             res.status(200).send({
-                status:200,
+                status: 200,
                 data: findEmployee
             })
-            }
         }
-    catch(err){
+    }
+    catch (err) {
         res.status(400).send({
-            status:400,
-            message : `${err}`
+            status: 400,
+            message: `${err}`
         })
     }
 }

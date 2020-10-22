@@ -37,14 +37,14 @@ const getTechStackDetail = async (req, res) => {
         res.status(400).send(err);
     }
 };
-const  getListTechStack  =  async (req,res)=>{
-    try{
+const getListTechStack = async (req, res) => {
+    try {
         const page = parseInt(req.query.page)
         const limit = parseInt(req.query.limit)
         const startIndex = (page - 1) * limit
         const endIndex = page * limit
-        const result= await techStack.find().skip(startIndex).limit(endIndex)
-        res.send(result)  
+        const result = await techStack.find().skip(startIndex).limit(endIndex)
+        res.send(result)
     }
     catch (err) {
         res.status(400).send(err);
@@ -74,26 +74,26 @@ const updateTechStack = async (req, res) => {
         res.status(400).send(err);
     }
 }
-const deleteTechStack = async (req,res) => {
+const deleteTechStack = async (req, res) => {
     try {
-      const techStackDelete = await techStack.findOne({ _id: req.params.id });
-      if (!techStackDelete) {
-        res.status(404).send({
-          status: 404,
-          code: 'TECH_STACK_NOT_FOUND',
-          error: true,
+        const techStackDelete = await techStack.findOne({ _id: req.params.id });
+        if (!techStackDelete) {
+            res.status(404).send({
+                status: 404,
+                code: 'TECH_STACK_NOT_FOUND',
+                error: true,
+            });
+        }
+        await techStack.remove({ _id: req.params.id })
+        res.status(200).send({
+            status: 200,
+            code: 'TECH_STACK_DELETE_TYPE_SUCCESS',
+            error: false,
         });
-      }
-    await techStack.remove({ _id: req.params.id })
-    res.status(200).send( {
-        status: 200,
-        code: 'TECH_STACK_DELETE_TYPE_SUCCESS',
-        error: false,
-      });
-    }catch( err ){
+    } catch (err) {
         res.status(400).send(err);
     }
-  };
+};
 
 module.exports.createNewStack = createNewStack
 module.exports.getTechStackDetail = getTechStackDetail
