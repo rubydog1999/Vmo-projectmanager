@@ -14,17 +14,6 @@ const createNewEmployee = async (req,res) =>{
         })
     }
     {
-    for(let a=0 ; a<=req.body.techStackList.lenght; a++){
-        const findTechStack = await techStack.findOne({_id:req.body.techStackList[a].techStack})
-        if (!findTechStack){
-            return res.status(400).send({
-                status: 404,
-                code: 'TECH_STACK_NOT_FOUND',
-                error: true,
-                message: `TechStack is not existed`,
-            })
-        }
-    }
     const newEmployees = new Employee(req.body)
     await newEmployees.save()
     res.status(200).send({
@@ -44,9 +33,9 @@ const createNewEmployee = async (req,res) =>{
 }
 const getEmployeee = async (req,res) =>{
     try{
-        const findEmployee = await Employee.findOne({_id:req.param.id}).populate('techStack')
+        const findEmployee = await Employee.findOne({_id:req.params.id}).populate('techStackID')
         if(findEmployee){
-            return status(200).send({
+            res.status(200).send({
                 status:200,
                 data: findEmployee
             })
