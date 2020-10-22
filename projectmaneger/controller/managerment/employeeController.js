@@ -44,25 +44,14 @@ const createNewEmployee = async (req,res) =>{
 }
 const getEmployeee = async (req,res) =>{
     try{
-        const findEmployee = await Employee.findOne({_id:req.param.id})
+        const findEmployee = await Employee.findOne({_id:req.param.id}).populate('techStack')
         if(findEmployee){
-            for(let a=0 ; a<=req.body.techStackList.lenght; a++){
-            const newTechStack = req.body.techStackList[a].techStack
-            const findTechStacks = await techStack.findById(newTechStack)
-            if (findTechStacks){
-                newTechStack  = findTechStacks
-                res.status(200).send({
-                    status:200,
-                    data: findEmployee
-                })
+            return status(200).send({
+                status:200,
+                data: findEmployee
+            })
             }
-            }
-            
-
         }
-
-
-    }
     catch(err){
         res.status(400).send({
             status:400,
