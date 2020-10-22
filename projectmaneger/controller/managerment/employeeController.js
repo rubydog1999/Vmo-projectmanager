@@ -1,6 +1,7 @@
 // const Departement = require ('../../model/departermentModel')
 const techStack = require('../../model/techStackModel')
 const Employee = require('../../model/employeeModel')
+const { updateCustomerGroup } = require('../customerGroupController')
 
 const createNewEmployee = async (req, res) => {
     try {
@@ -83,24 +84,16 @@ const getEmployeeeList = async (req, res) => {
         })
     }
 }
-const updateEmployee =async(req,res)=>{
-    try{
-        const getCustomerGroup = await CustomerGroup.updateOne({ _id: req.params.id },
-            {
-                $set: {
-                    name: req.body.name,
-                    description: req.body.description,
-                    priority: req.body.priority,
-                    status: req.body.status
-                }
-            },
-        );
-        res.status(200).send(
-            {
-                status: 200,
-                message: "Update access",
-                data: getCustomerGroup
-            })
+const updateEmployee = async (req, res) => {
+    try {
+        const findEmployeeUpdate = await Employee.findByIdAndUpdate(req.params.id, req.body)
+        if (findEmployeeUpdate)
+            res.status(200).send(
+                {
+                    status: 200,
+                    message: "Update access",
+                    data: findEmployeeUpdate
+                })
         return;
     }
     catch (err) {
@@ -110,3 +103,4 @@ const updateEmployee =async(req,res)=>{
 module.exports.createNewEmployee = createNewEmployee;
 module.exports.getEmployeee = getEmployeee;
 module.exports.getEmployeeeList = getEmployeeeList;
+module.exports.updateEmployee = updateEmployee;
