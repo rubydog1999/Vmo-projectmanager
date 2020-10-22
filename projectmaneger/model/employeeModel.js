@@ -25,11 +25,8 @@ const employee = new Schema({
     type: String,
     required: [true, 'Address field is required'],
   },
-  language: [String
-  ],
-  certification: [
-    String
-  ],
+  language: [String],
+  certification: [String],
   techStackList: [
     {
       techStack:

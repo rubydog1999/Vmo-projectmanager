@@ -1,11 +1,10 @@
 // const Departement = require ('../../model/departermentModel')
 const techStack = require('../../model/techStackModel')
 const Employee = require('../../model/employeeModel')
-const { get } = require('mongoose')
 
 const createNewEmployee = async (req, res) => {
     try {
-        
+
         const employee = await Employee.findOne({ idNumber: req.body.idNumber })
         if (employee) {
             return res.status(400).send({
@@ -13,17 +12,6 @@ const createNewEmployee = async (req, res) => {
                 message: "employee already exist need to change IDs number",
                 code: "EMPLOYEE_EXISIED"
             })
-        }
-        for(let a=0 ; a<=req.body.techStackList.lenght; a++){
-            const findTechStack = await techStack.findOne({_id:req.body.techStackList[a].techStack})
-            if (!findTechStack){
-                return res.status(400).send({
-                    status: 404,
-                    code: 'TECH_STACK_NOT_FOUND',
-                    error: true,
-                    message: `TechStack is not existed`,
-                })
-            }
         }
         {
             const newEmployees = new Employee(req.body)
@@ -54,14 +42,6 @@ const getEmployeee = async (req, res) => {
                 },
 
             });
-        // .populate({
-        //     path: 'techStackList',
-        //     populate: {
-        //       path: 'techStack',
-        //       select: ['name', 'status'],
-        //     },
-        //   });
-        // .populate('techStackID')
         if (findEmployee) {
             res.status(200).send({
                 status: 200,
@@ -76,5 +56,57 @@ const getEmployeee = async (req, res) => {
         })
     }
 }
+const getEmployeeeList = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page)
+        const limit = parseInt(req.query.limit)
+        const startIndex = (page - 1) * limit
+        const endIndex = page * limit
+        const result = await Employee.find().skip(startIndex).limit(endIndex).
+            populate({
+                path: 'techStackList',
+                populate: {
+                    path: 'techStack',
+                    select: ['name']
+                },
+
+            });
+        return res.status(200).send({
+            status: 200,
+            result
+        })
+    }
+    catch (err) {
+        res.status(400).send({
+            status: 400,
+            message: `${err}`
+        })
+    }
+}
+const updateEmployee =async(req,res)=>{
+    try{
+        const getCustomerGroup = await CustomerGroup.updateOne({ _id: req.params.id },
+            {
+                $set: {
+                    name: req.body.name,
+                    description: req.body.description,
+                    priority: req.body.priority,
+                    status: req.body.status
+                }
+            },
+        );
+        res.status(200).send(
+            {
+                status: 200,
+                message: "Update access",
+                data: getCustomerGroup
+            })
+        return;
+    }
+    catch (err) {
+        res.status(400).send(err);
+    }
+}
 module.exports.createNewEmployee = createNewEmployee;
 module.exports.getEmployeee = getEmployeee;
+module.exports.getEmployeeeList = getEmployeeeList;

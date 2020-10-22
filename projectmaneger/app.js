@@ -10,6 +10,8 @@ const techStack = require('./route/techStack')
 const projectStatus = require('./route/projectStatus')
 const customerGroup = require('./route/customerGroup')
 const employees = require('./route/employee')
+const department = require('./route/departement')
+const project = require('./route/project')
 const validationID = require('./middelware/validationID')
 
 dotenv.config();
@@ -34,7 +36,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use('/api/*/:id', validationID)
 
-app.use('/api', admin, projectType, techStack, projectStatus, customerGroup, employees);
+app.use('/api', admin, projectType, techStack, projectStatus, customerGroup, employees,department,project);
 app.listen(3000, () => logger.info('Server listening on port 3000!'))
 
 
