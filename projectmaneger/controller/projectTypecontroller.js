@@ -1,6 +1,13 @@
+const errorResponse = require('../helper/error');
 const ProjectType = require('../model/projectTypeModel');
+const { ProjectTypeValidationUpdate, ProjectTypeValidationCreate } = require('../validation/projectTypeValidation');
 const createNewProjectType = async (req, res) => {
     try {
+        const { error } = ProjectTypeValidationCreate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const projectTypeExit = await ProjectType.findOne({ name: req.body.name });
         if (projectTypeExit) return res.status(400).send({
             status: 400,
@@ -27,13 +34,6 @@ const createNewProjectType = async (req, res) => {
 };
 const getProjectTypeProfile = async (req, res) => {
     try {
-        const checkID = await mongoose.Types.ObjectId.isValid(id)
-        console.log(checkID)
-        if (checkID = false)
-            res.status(400).send({
-                status: 400,
-                message: 'INVALID ID'
-            })
         const projectType = await ProjectType.findOne({ _id: req.params.id });
         if (!projectType) return res.status(404).send({
             status: 404,
@@ -47,6 +47,12 @@ const getProjectTypeProfile = async (req, res) => {
 
 
 const updateProjectType = async (req, res) => {
+    
+    const { error } = ProjectTypeValidationUpdate(req.body)
+    if (error) res.status(400).send({
+        status:400,
+        error: error.details[0].message
+    })
     try {
         const ProjectTypeUpdate = await ProjectType.updateOne({ _id: req.params.id },
             {
@@ -64,7 +70,7 @@ const updateProjectType = async (req, res) => {
         return;
     }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 const deleteProjectType = async (req, res) => {
@@ -84,7 +90,7 @@ const deleteProjectType = async (req, res) => {
             error: false,
         });
     } catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 };
 

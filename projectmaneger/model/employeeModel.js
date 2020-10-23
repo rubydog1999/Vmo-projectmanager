@@ -5,7 +5,6 @@ const employee = new Schema({
   fullName: {
     type: String,
     required: [true, 'Employee name field is required'],
-    unique: true,
   },
   DoB: {
     type: Date,
@@ -38,12 +37,6 @@ const employee = new Schema({
       description: String,
     },
   ],
-
-  // techStackID: [{ 
-  //   type: mongoose.Schema.Types.ObjectId, ref: 'techStack' 
-
-  // }],
-
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
 module.exports = mongoose.model('Employee', employee);

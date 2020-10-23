@@ -1,6 +1,13 @@
+const errorResponse = require('../helper/error');
 const techStack = require('../model/techStackModel');
+const {TechStackVadilationUpdate, TechStackVadilationCreate} = require('../validation/techStackValidation')
 const createNewStack = async (req, res) => {
     try {
+        const { error } = TechStackVadilationCreate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const techStackExit = await techStack.findOne({ name: req.body.name });
         if (techStackExit) return res.status(404).send({
             status: 404,
@@ -47,12 +54,17 @@ const getListTechStack = async (req, res) => {
         res.send(result)
     }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 
 const updateTechStack = async (req, res) => {
     try {
+        const { error } = TechStackVadilationUpdate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const gettechStack = await techStack.updateOne({ _id: req.params.id },
             {
                 $set: {
@@ -71,7 +83,7 @@ const updateTechStack = async (req, res) => {
         return;
     }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 const deleteTechStack = async (req, res) => {
@@ -91,7 +103,7 @@ const deleteTechStack = async (req, res) => {
             error: false,
         });
     } catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 };
 

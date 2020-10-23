@@ -1,4 +1,4 @@
-const mongoose =  require ('mongoose');
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const ObjectId = Schema.Types.ObjectId;
 
@@ -21,15 +21,15 @@ const department = new Schema({
       },
     },
   ],
-//   projectList: [
-//     {
-//       project:
-//       {
-//         type: ObjectId,
-//         ref: 'projects',
-//       },
-//     },
-//   ],
+  projectList: [
+    {
+      project:
+      {
+        type: ObjectId,
+        ref: 'Project',
+      },
+    },
+  ],
   employeeList: [
     {
       employee:

@@ -39,6 +39,15 @@ const project = new Schema({
       },
     },
   ],
+  departmentList: [
+    {
+      department:
+      {
+        type: ObjectId,
+        ref: 'Department',
+      }
+    }
+  ]
 }, { timestamps: { createdAt: 'createdAt', updatedAt: 'updatedAt' } });
 
 module.exports = mongoose.model('Project', project);

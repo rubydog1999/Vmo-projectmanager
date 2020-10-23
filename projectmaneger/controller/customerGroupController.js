@@ -1,7 +1,14 @@
 const { array } = require('joi');
-const CustomerGroup = require('../model/customerGroupModel')
+const errorResponse = require('../helper/error');
+const CustomerGroup = require('../model/customerGroupModel');
+const { CustomerGroupValidationCreate, CustomerGroupValidationUpdate } = require('../validation/customerGroupValidation');
 const createNewCustomerGroup = async (req, res) => {
     try {
+        const { error } = CustomerGroupValidationCreate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const CustomerGroupExit = await CustomerGroup.findOne({ name: req.body.name });
         if (CustomerGroupExit) return res.status(404).send({
             status: 404,
@@ -22,13 +29,18 @@ const createNewCustomerGroup = async (req, res) => {
             data: newCustomerGroup._id,
         })
     } catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 };
 
 
 const getCustomerGroup = async (req, res) => {
     try {
+        const { error } = CustomerGroupValidationUpdate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const CustomerGroupExit = await CustomerGroup.findOne({ _id: req.params.id });
         if (!CustomerGroupExit) return res.status(404).send({
             status: 404,
@@ -49,12 +61,13 @@ const getListCustomerGroup = async (req, res) => {
         res.send(result)
     }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 
 const updateCustomerGroup = async (req, res) => {
     try {
+
         const getCustomerGroup = await CustomerGroup.updateOne({ _id: req.params.id },
             {
                 $set: {
@@ -74,7 +87,7 @@ const updateCustomerGroup = async (req, res) => {
         return;
     }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 const deleteCustomerGroup = async (req, res) => {
@@ -94,7 +107,7 @@ const deleteCustomerGroup = async (req, res) => {
             error: false,
         });
     } catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 };
 

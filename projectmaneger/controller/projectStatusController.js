@@ -1,6 +1,13 @@
-const ProjectStatus = require('../model/projectStatus')
+const errorResponse = require('../helper/error');
+const ProjectStatus = require('../model/projectStatusModel');
+const { ProjectStatusValidationCreate, ProjectStatusValidationUpdate } = require('../validation/projectStatusValidation');
 const createNewProjectStatus = async (req, res) => {
     try {
+        const { error } = ProjectStatusValidationCreate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const ProjectStatusExit = await ProjectStatus.findOne({ name: req.body.name });
         if (ProjectStatusExit) return res.status(404).send({
             status: 404,
@@ -53,6 +60,11 @@ const getListProjectStatus = async (req, res) => {
 
 const updateProjectStatus = async (req, res) => {
     try {
+        const { error } = ProjectStatusValidationUpdate(req.body)
+        if (error) res.status(400).send({
+            status:400,
+            error: error.details[0].message
+        })
         const findProjectStatus = await ProjectStatus.findById({_id:req.params.id})
         if (!findProjectStatus)
         res.status(404).send(
@@ -80,7 +92,7 @@ const updateProjectStatus = async (req, res) => {
             })
         }
     catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 }
 const deleteProjectStatus = async (req, res) => {
@@ -100,7 +112,7 @@ const deleteProjectStatus = async (req, res) => {
             error: false,
         });
     } catch (err) {
-        res.status(400).send(err);
+        return errorResponse
     }
 };
 
