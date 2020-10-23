@@ -53,7 +53,16 @@ const getListProjectStatus = async (req, res) => {
 
 const updateProjectStatus = async (req, res) => {
     try {
-        const getProjectStatus = await ProjectStatus.updateOne({ _id: req.params.id },
+        const findProjectStatus = await ProjectStatus.findById({_id:req.params.id})
+        if (!findProjectStatus)
+        res.status(404).send(
+            {
+                status: 404,
+                message: "Project Status not found",
+                code: "PROJECT_STATUS_NOT_FOUND"
+            })
+        
+        const getProjectStatus = await ProjectStatus.updateOne({ _id: req.params.id },           
             {
                 $set: {
                     name: req.body.name,
@@ -62,14 +71,14 @@ const updateProjectStatus = async (req, res) => {
                 }
             },
         );
+        if(getProjectStatus)
         res.status(200).send(
             {
                 status: 200,
                 message: "Update access",
                 data: getProjectStatus
             })
-        return;
-    }
+        }
     catch (err) {
         res.status(400).send(err);
     }

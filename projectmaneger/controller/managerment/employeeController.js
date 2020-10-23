@@ -1,7 +1,8 @@
 // const Departement = require ('../../model/departermentModel')
 const techStack = require('../../model/techStackModel')
 const Employee = require('../../model/employeeModel')
-const { updateCustomerGroup } = require('../customerGroupController')
+const errorResponse = require('../../helper/error');
+const { update } = require('../../model/techStackModel');
 
 const createNewEmployee = async (req, res) => {
     try {
@@ -25,10 +26,7 @@ const createNewEmployee = async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).send({
-            status: 400,
-            message: `${err}`
-        })
+        return errorResponse
 
     }
 }
@@ -51,10 +49,7 @@ const getEmployeee = async (req, res) => {
         }
     }
     catch (err) {
-        res.status(400).send({
-            status: 400,
-            message: `${err}`
-        })
+        return errorResponse
     }
 }
 const getEmployeeeList = async (req, res) => {
@@ -78,29 +73,69 @@ const getEmployeeeList = async (req, res) => {
         })
     }
     catch (err) {
-        res.status(400).send({
-            status: 400,
-            message: `${err}`
-        })
+        return errorResponse
     }
 }
 const updateEmployee = async (req, res) => {
     try {
-        const findEmployeeUpdate = await Employee.findByIdAndUpdate(req.params.id, req.body)
-        if (findEmployeeUpdate)
+        const findEmployeeUpdate = await Employee.findById({ _id: req.params.id })
+        if (!findEmployeeUpdate)
+            res.status(404).send(
+                {
+                    status: 404,
+                    message: "Employee is not found",
+                    code: "EMPLOYEE_NOT_FOUND"
+                })
+        const getEmployeeUpdate = await Employee.updateOne({ _id: req.params.id },
+            {
+                $set: {
+                    fullName: req.body.fullName,
+                    DoB: req.body.DoB,
+                    idNumber: req.body.idNumber,
+                    phoneNumber: req.body.phoneNumber,
+                    address: req.body.address,
+                    techStackList: req.body.techStackList,
+                    certification: req.body.certification,
+                    language: req.body.language
+                }
+            },
+        );
+        if (getEmployeeUpdate)
             res.status(200).send(
                 {
                     status: 200,
                     message: "Update access",
-                    data: findEmployeeUpdate
+                    data: getEmployeeUpdate
                 })
-        return;
     }
     catch (err) {
         res.status(400).send(err);
+    }
+}
+const deleteEmployee = async (req, res) => {
+    try {
+        const Employeedelete = await Employee.findOne({ _id: req.params.id });
+        if (!Employeedelete) {
+            res.status(404).send({
+                status: 404,
+                message: 'employee is not found',
+                code: 'EMPLOYEE_IS_NOT_FOUND',
+                error: true,
+            });
+        }
+        await ProjectStatus.remove({ _id: req.params.id })
+        res.status(200).send({
+            status: 200,
+            message: 'employee is deleted',
+            code: 'EMPLOYEE_DELETE_SUCCESS',
+            error: false,
+        });
+    } catch (err) {
+        return errorResponse
     }
 }
 module.exports.createNewEmployee = createNewEmployee;
 module.exports.getEmployeee = getEmployeee;
 module.exports.getEmployeeeList = getEmployeeeList;
 module.exports.updateEmployee = updateEmployee;
+module.exports.deleteEmployee = deleteEmployee;
